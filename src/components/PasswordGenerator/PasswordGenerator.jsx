@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./PasswordGenerator.css";
 
 function PasswordGenerator() {
   // przechowuje długość hasła
@@ -62,7 +63,7 @@ function PasswordGenerator() {
   };
 
   return (
-    <div>
+    <div className="password-generator">
       <h2>Opcje Generatora</h2>
 
       <div>
@@ -157,7 +158,7 @@ function PasswordGenerator() {
 
       <div>
         <h3>Wygenerowane hasło</h3>
-        <p>
+        <p className="password-display">
           {generatedPassword
             ? showPassword
               ? generatedPassword
@@ -176,7 +177,7 @@ function PasswordGenerator() {
             >
               Kopiuj hasło
             </button>
-            {copied && <p style={{ color: "green" }}>Skopiowano!</p>}
+            {copied && <p className="copy-feedback">Skopiowano!</p>}
           </>
         )}
       </div>
