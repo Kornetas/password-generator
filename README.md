@@ -1,5 +1,7 @@
 # 🔐 Generator Haseł – React + Vite
 
+[![Live demo](https://img.shields.io/badge/🔗%20Live-Demo-blue?style=for-the-badge)](https://kornetas.github.io/password-generator/)
+
 Prosty, nowoczesny generator haseł napisany w React.  
 Pozwala wygenerować bezpieczne hasło na podstawie wybranych opcji, skopiować je lub pobrać jako plik `.txt`.
 
