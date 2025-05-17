@@ -3,37 +3,31 @@ import "./PasswordGenerator.css";
 import { downloadToFile } from "../../utils/downloadToFile";
 
 function PasswordGenerator() {
-  // przechowuje długość hasła
+  // ustawienia długości hasła (domyślnie 12 znaków)
   const [length, setLength] = useState(12);
 
-  // czy mają być znaki specjalne
+  // checkboxy: czy dołączyć określone typy znaków
   const [includeSymbols, setIncludeSymbols] = useState(true);
-
-  // czy mają być cyfry
   const [includeNumbers, setIncludeNumbers] = useState(true);
-
-  // czy mają być małe litery
   const [includeLowercase, setIncludeLowercase] = useState(true);
-
-  // czy mają być wielkie litery
   const [includeUppercase, setIncludeUppercase] = useState(true);
 
   // generator hasła
   const [generatedPassword, setGeneratedPassword] = useState("");
 
-  // kontrola widocznosci hasła
+  // czy hasło ma być widoczne (czy tylko gwiazdki)
   const [showPassword, setShowPassword] = useState(false);
 
   // powiadomienie "Skopiowano" po kliknięciu kopiuj
   const [copied, setCopied] = useState(false);
 
-  // zaznacz przynajmniej jedną opcję
+  // komunikat błędu jeśli nie zaznaczono żadnej opcji
   const [error, setError] = useState("");
 
-  //ocena siły hasła
+  // siła hasła (Słabe / Średnie / Mocne)
   const [passwordStrength, setPasswordStrength] = useState("");
 
-  // funkcja wywoływania po kliknięciu generuj hasło
+  // główna funkcja generująca hasło na podstawie opcji
   const handleGenerate = () => {
     console.log("Kliknięto przycisk GENERUJ");
 
@@ -42,8 +36,9 @@ function PasswordGenerator() {
     const NUMBERS = "0123456789";
     const SYMBOLS = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
 
-    let characterPool = ""; // Zawsze dodajemy małe litery
+    let characterPool = ""; // tu zbieramy zestaw znaków
 
+    // dokładamy do puli znaki na podstawie checkboxów
     if (includeLowercase) characterPool += LOWERCASE;
     if (includeUppercase) characterPool += UPPERCASE;
     if (includeNumbers) characterPool += NUMBERS;
@@ -51,7 +46,7 @@ function PasswordGenerator() {
 
     console.log("Zbiór możliwych znaków:", characterPool);
 
-    // Jeśli nie wybrano żadnych opcji – nie generujemy
+    // Jeśli nie wybrano żadnych opcji – nie generujemy hasła
     if (characterPool.length === 0) {
       console.warn("Nie wybrano żadnych opcji!");
       setGeneratedPassword("");
@@ -59,10 +54,11 @@ function PasswordGenerator() {
       return;
     }
 
-    setError("");
+    setError(""); // usuwamy poprzedni błąd (jeśli był)
 
     let password = "";
 
+    // losujemy kolejne znaki z characterPool
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * characterPool.length);
       password += characterPool[randomIndex];
@@ -71,11 +67,13 @@ function PasswordGenerator() {
     console.log("Wygenerowane hasło:", password);
     setGeneratedPassword(password);
 
+    // ocena siły hasła (na podstawie reguł punktowych)
     const strength = evaluateStrength(password);
     setPasswordStrength(strength);
     console.log("Siła hasła:", strength);
   };
 
+  // logika oceny siły hasła (punktacja za różne typy znaków)
   const evaluateStrength = (password) => {
     let score = 0;
 
@@ -91,6 +89,7 @@ function PasswordGenerator() {
     return "";
   };
 
+  // funkcja zapisująca hasło do pliku .txt (używa utilsa)
   const handleDownload = () => {
     downloadToFile(generatedPassword);
   };
@@ -100,10 +99,12 @@ function PasswordGenerator() {
       <h2>Generator haseł</h2>
       {error && <p className="error-message">{error}</p>}
 
+      {/* suwaczek do ustawiania długości */}
       <div className="option-group">
         <label>
           Długość hasła: {length}
           <input
+            name="length"
             type="range"
             min="4"
             max="32"
@@ -116,9 +117,11 @@ function PasswordGenerator() {
         </label>
       </div>
 
+      {/* checkboxy do wyboru typów znaków */}
       <div className="option-group">
         <label>
           <input
+            name="lower_case"
             type="checkbox"
             checked={includeLowercase}
             onChange={() => setIncludeLowercase(!includeLowercase)}
@@ -128,6 +131,7 @@ function PasswordGenerator() {
 
         <label>
           <input
+            name="upper_case"
             type="checkbox"
             checked={includeUppercase}
             onChange={() => {
@@ -143,6 +147,7 @@ function PasswordGenerator() {
 
         <label>
           <input
+            name="numbers"
             type="checkbox"
             checked={includeNumbers}
             onChange={() => {
@@ -158,6 +163,7 @@ function PasswordGenerator() {
 
         <label>
           <input
+            name="symbols"
             type="checkbox"
             checked={includeSymbols}
             onChange={() => {
@@ -172,11 +178,14 @@ function PasswordGenerator() {
         </label>
       </div>
 
+      {/* przycisk do generowania hasła */}
       <button onClick={handleGenerate}>Generuj hasło</button>
 
+      {/* checkbox: pokaż / ukryj hasło */}
       <div className="option-group">
         <label>
           <input
+            name="show_password"
             type="checkbox"
             checked={showPassword}
             onChange={() => setShowPassword(!showPassword)}
@@ -185,6 +194,7 @@ function PasswordGenerator() {
         </label>
       </div>
 
+      {/* wyświetlanie hasła */}
       <div>
         <h3>Wygenerowane hasło</h3>
         <p className="password-display">
@@ -194,12 +204,15 @@ function PasswordGenerator() {
               : "*".repeat(generatedPassword.length)
             : "Brak hasła"}
         </p>
+
+        {/* informacja o sile hasła */}
         {generatedPassword && (
           <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
             Siła hasła: {passwordStrength}
           </p>
         )}
 
+        {/* przyciski: kopiuj i pobierz */}
         {generatedPassword && (
           <>
             <button
@@ -212,7 +225,11 @@ function PasswordGenerator() {
             >
               Kopiuj hasło
             </button>
+
+            {/* komunikat że skopiowano */}
             {copied && <p className="copy-feedback">Skopiowano!</p>}
+
+            {/* przycisk do pobrania hasła do pliku */}
             {generatedPassword && (
               <button onClick={handleDownload}>Pobierz hasło txt</button>
             )}
