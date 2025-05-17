@@ -29,6 +29,9 @@ function PasswordGenerator() {
   // zaznacz przynajmniej jedną opcję
   const [error, setError] = useState("");
 
+  //ocena siły hasła
+  const [passwordStrength, setPasswordStrength] = useState("");
+
   // funkcja wywoływania po kliknięciu generuj hasło
   const handleGenerate = () => {
     console.log("Kliknięto przycisk GENERUJ");
@@ -66,6 +69,25 @@ function PasswordGenerator() {
 
     console.log("Wygenerowane hasło:", password);
     setGeneratedPassword(password);
+
+    const strength = evaluateStrength(password);
+    setPasswordStrength(strength);
+    console.log("Siła hasła:", strength);
+  };
+
+  const evaluateStrength = (password) => {
+    let score = 0;
+
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 1) return "Słabe";
+    if (score === 2 || score === 3) return "Średnie";
+    if (score === 4) return "Mocne";
+
+    return "";
   };
 
   return (
@@ -167,6 +189,11 @@ function PasswordGenerator() {
               : "*".repeat(generatedPassword.length)
             : "Brak hasła"}
         </p>
+        {generatedPassword && (
+          <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
+            Siła hasła: {passwordStrength}
+          </p>
+        )}
 
         {generatedPassword && (
           <>
