@@ -13,6 +13,16 @@ function PasswordGenerator() {
   // czy mają być wielkie litery
   const [includeUppercase, setIncludeUppercase] = useState(true);
 
+  // funkcja wywoływania po kliknięciu generuj hasło
+  const handleGenerate = () => {
+    console.log("Klik przycisk generuj");
+    console.log("aktualne ustawienia");
+    console.log("Długość:", length);
+    console.log("znaki specjalne:", includeSymbols);
+    console.log("numery", includeNumbers);
+    console.log("wielkie litery", includeUppercase);
+  };
+
   return (
     <div>
       <h2>Opcje Generatora</h2>
@@ -83,7 +93,7 @@ function PasswordGenerator() {
         </label>
       </div>
 
-      <button>Generuj hasło</button>
+      <button onClick={handleGenerate}>Generuj hasło</button>
 
       <div>
         <h3>Wygenerowane hasło</h3>
