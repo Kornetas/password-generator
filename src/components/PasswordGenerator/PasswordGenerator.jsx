@@ -64,11 +64,11 @@ function PasswordGenerator() {
 
   return (
     <div className="password-generator">
-      <h2>Opcje Generatora</h2>
+      <h2>Generator haseł</h2>
 
-      <div>
+      <div className="option-group">
         <label>
-          Długość hasła:
+          Długość hasła: {length}
           <input
             type="range"
             min="4"
@@ -81,7 +81,47 @@ function PasswordGenerator() {
           />
         </label>
       </div>
-      <div>
+
+      <div className="option-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={includeLowercase}
+            onChange={() => setIncludeLowercase(!includeLowercase)}
+          />
+          Małe litery (abc)
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={includeUppercase}
+            onChange={() => {
+              setIncludeUppercase(!includeUppercase);
+              console.log(
+                "Przełączanie opcji „uwzględnij wielkie litery”:",
+                !includeUppercase
+              );
+            }}
+          />
+          Wielkie litery (ABC)
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={includeNumbers}
+            onChange={() => {
+              setIncludeNumbers(!includeNumbers);
+              console.log(
+                "Przełączanie opcji „uwzględnij cyfry”:",
+                !includeNumbers
+              );
+            }}
+          />
+          Numery (123456)
+        </label>
+
         <label>
           <input
             type="checkbox"
@@ -98,54 +138,9 @@ function PasswordGenerator() {
         </label>
       </div>
 
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={includeNumbers}
-            onChange={() => {
-              setIncludeNumbers(!includeNumbers);
-              console.log(
-                "Przełączanie opcji „uwzględnij cyfry”:",
-                !includeNumbers
-              );
-            }}
-          />
-          Numery (123456)
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={includeLowercase}
-            onChange={() => setIncludeLowercase(!includeLowercase)}
-          />
-          Małe litery (abc)
-        </label>
-      </div>
-
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={includeUppercase}
-            onChange={() => {
-              setIncludeUppercase(!includeUppercase);
-              console.log(
-                "Przełączanie opcji „uwzględnij cyfry”:",
-                !includeUppercase
-              );
-            }}
-          />
-          Wielkie litery (ABC)
-        </label>
-      </div>
-
       <button onClick={handleGenerate}>Generuj hasło</button>
 
-      <div>
+      <div className="option-group">
         <label>
           <input
             type="checkbox"
@@ -165,13 +160,14 @@ function PasswordGenerator() {
               : "*".repeat(generatedPassword.length)
             : "Brak hasła"}
         </p>
+
         {generatedPassword && (
           <>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(generatedPassword);
-                setCopied(true); // pokaż komunikat
-                setTimeout(() => setCopied(false), 3000); // ukryj po 2 sek
+                setCopied(true);
+                setTimeout(() => setCopied(false), 3000);
                 console.log("Hasło zostało skopiowane do schowka.");
               }}
             >
