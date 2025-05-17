@@ -1,10 +1,11 @@
 import React from "react";
+import PasswordGenerator from "./components/PasswordGenerator";
 
 function App() {
   return (
     <div>
       <h1>Generator Haseł</h1>
-      {/* Tutaj później dodamy komponent */}
+      <PasswordGenerator />
     </div>
   );
 }
