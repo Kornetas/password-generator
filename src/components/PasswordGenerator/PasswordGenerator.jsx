@@ -26,6 +26,9 @@ function PasswordGenerator() {
   // powiadomienie "Skopiowano" po kliknięciu kopiuj
   const [copied, setCopied] = useState(false);
 
+  // zaznacz przynajmniej jedną opcję
+  const [error, setError] = useState("");
+
   // funkcja wywoływania po kliknięciu generuj hasło
   const handleGenerate = () => {
     console.log("Kliknięto przycisk GENERUJ");
@@ -48,8 +51,11 @@ function PasswordGenerator() {
     if (characterPool.length === 0) {
       console.warn("Nie wybrano żadnych opcji!");
       setGeneratedPassword("");
+      setError("Musisz zaznaczyć przynajmniej jedną opcję!");
       return;
     }
+
+    setError("");
 
     let password = "";
 
@@ -65,6 +71,7 @@ function PasswordGenerator() {
   return (
     <div className="password-generator">
       <h2>Generator haseł</h2>
+      {error && <p className="error-message">{error}</p>}
 
       <div className="option-group">
         <label>
