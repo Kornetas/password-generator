@@ -19,6 +19,12 @@ function PasswordGenerator() {
   // generator hasła
   const [generatedPassword, setGeneratedPassword] = useState("");
 
+  // kontrola widocznosci hasła
+  const [showPassword, setShowPassword] = useState(false);
+
+  // powiadomienie "Skopiowano" po kliknięciu kopiuj
+  const [copied, setCopied] = useState(false);
+
   // funkcja wywoływania po kliknięciu generuj hasło
   const handleGenerate = () => {
     console.log("Kliknięto przycisk GENERUJ");
@@ -139,8 +145,40 @@ function PasswordGenerator() {
       <button onClick={handleGenerate}>Generuj hasło</button>
 
       <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword(!showPassword)}
+          />
+          Pokaż hasło
+        </label>
+      </div>
+
+      <div>
         <h3>Wygenerowane hasło</h3>
-        <p>{generatedPassword ? "********" : "Brak hasła"}</p>
+        <p>
+          {generatedPassword
+            ? showPassword
+              ? generatedPassword
+              : "*".repeat(generatedPassword.length)
+            : "Brak hasła"}
+        </p>
+        {generatedPassword && (
+          <>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(generatedPassword);
+                setCopied(true); // pokaż komunikat
+                setTimeout(() => setCopied(false), 3000); // ukryj po 2 sek
+                console.log("Hasło zostało skopiowane do schowka.");
+              }}
+            >
+              Kopiuj hasło
+            </button>
+            {copied && <p style={{ color: "green" }}>Skopiowano!</p>}
+          </>
+        )}
       </div>
     </div>
   );
