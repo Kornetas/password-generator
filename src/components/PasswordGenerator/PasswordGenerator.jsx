@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./PasswordGenerator.css";
+import { downloadToFile } from "../../utils/downloadToFile";
 
 function PasswordGenerator() {
   // przechowuje długość hasła
@@ -88,6 +89,10 @@ function PasswordGenerator() {
     if (score === 4) return "Mocne";
 
     return "";
+  };
+
+  const handleDownload = () => {
+    downloadToFile(generatedPassword);
   };
 
   return (
@@ -208,6 +213,9 @@ function PasswordGenerator() {
               Kopiuj hasło
             </button>
             {copied && <p className="copy-feedback">Skopiowano!</p>}
+            {generatedPassword && (
+              <button onClick={handleDownload}>Pobierz hasło txt</button>
+            )}
           </>
         )}
       </div>
