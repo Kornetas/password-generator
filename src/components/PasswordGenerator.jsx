@@ -10,17 +10,49 @@ function PasswordGenerator() {
   // czy mają być cyfry
   const [includeNumbers, setIncludeNumbers] = useState(true);
 
+  // czy mają być małe litery
+  const [includeLowercase, setIncludeLowercase] = useState(true);
+
   // czy mają być wielkie litery
   const [includeUppercase, setIncludeUppercase] = useState(true);
 
+  // generator hasła
+  const [generatedPassword, setGeneratedPassword] = useState("");
+
   // funkcja wywoływania po kliknięciu generuj hasło
   const handleGenerate = () => {
-    console.log("Klik przycisk generuj");
-    console.log("aktualne ustawienia");
-    console.log("Długość:", length);
-    console.log("znaki specjalne:", includeSymbols);
-    console.log("numery", includeNumbers);
-    console.log("wielkie litery", includeUppercase);
+    console.log("Kliknięto przycisk GENERUJ");
+
+    const LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+    const UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const NUMBERS = "0123456789";
+    const SYMBOLS = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+
+    let characterPool = ""; // Zawsze dodajemy małe litery
+
+    if (includeLowercase) characterPool += LOWERCASE;
+    if (includeUppercase) characterPool += UPPERCASE;
+    if (includeNumbers) characterPool += NUMBERS;
+    if (includeSymbols) characterPool += SYMBOLS;
+
+    console.log("Zbiór możliwych znaków:", characterPool);
+
+    // Jeśli nie wybrano żadnych opcji – nie generujemy
+    if (characterPool.length === 0) {
+      console.warn("Nie wybrano żadnych opcji!");
+      setGeneratedPassword("");
+      return;
+    }
+
+    let password = "";
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characterPool.length);
+      password += characterPool[randomIndex];
+    }
+
+    console.log("Wygenerowane hasło:", password);
+    setGeneratedPassword(password);
   };
 
   return (
@@ -80,6 +112,17 @@ function PasswordGenerator() {
         <label>
           <input
             type="checkbox"
+            checked={includeLowercase}
+            onChange={() => setIncludeLowercase(!includeLowercase)}
+          />
+          Małe litery (abc)
+        </label>
+      </div>
+
+      <div>
+        <label>
+          <input
+            type="checkbox"
             checked={includeUppercase}
             onChange={() => {
               setIncludeUppercase(!includeUppercase);
@@ -97,7 +140,7 @@ function PasswordGenerator() {
 
       <div>
         <h3>Wygenerowane hasło</h3>
-        <p>********</p>
+        <p>{generatedPassword ? "********" : "Brak hasła"}</p>
       </div>
     </div>
   );
